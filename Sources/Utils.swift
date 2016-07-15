@@ -20,8 +20,13 @@ public func mktemp<T>(_ template: String = NSUUID().uuidString, prefix: String! 
 
 public func swiftpmManifestTurnToJSON(at path: String) throws -> String {
     
+//    let swiftPath = try Task.run("swiftenv which swift")
+//    guard swiftPath.code == 0 else {
+//        throw Error.swiftPathLookup
+//    }
+    
     let result = try Task.run(
-        "/Library/Developer/Toolchains/swift-DEVELOPMENT-SNAPSHOT-2016-06-06-a.xctoolchain/usr/bin/swift",
+        "swift",
         "package",
         "dump-package",
         "--output",

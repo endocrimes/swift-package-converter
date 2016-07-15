@@ -6,6 +6,7 @@ enum Error: ErrorProtocol {
     case noBodySupplied
     case packageSwiftParsingFailed
     case mktempFailed
+    case swiftPathLookup
 }
 
 // start the server
