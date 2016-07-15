@@ -17,6 +17,16 @@ app.get("/") { _ in
     return "See documentation at https://github.com/czechboy0/swift-package-converter"
 }
 
+app.get("/swift-version") { _ in
+    var comps = #file.characters.split(separator: "/").map(String.init)
+    let path = ([""] + comps.dropLast(2) + [".swift-version"]).joined(separator: "/")
+    var version = try NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String
+    if version.characters.last! == "\n" {
+        version = String(version.characters.dropLast())
+    }
+    return version
+}
+
 app.post("/to-json") { request in
     
     guard let bytes = request.body.bytes where !bytes.isEmpty else {

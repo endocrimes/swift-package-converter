@@ -3,11 +3,11 @@ import Environment
 import Vapor
 import Tasks
 
-public func mktemp<T>(_ template: String = NSUUID().uuidString, prefix: String! = nil, body: @noescape(String) throws -> T) rethrows -> T {
+public func mktemp<T>(prefix: String! = nil, body: @noescape(String) throws -> T) rethrows -> T {
     var prefix = prefix ?? Env["TMPDIR"] ?? "/tmp/"
     if !prefix.hasSuffix("/") { prefix += "/" }
-    
-    let path = prefix + "\(template).XXXXXX"
+
+    let path = prefix + "\(String(random())).XXXXXX"
     
     return try path.withCString { template in
         let mutable = UnsafeMutablePointer<Int8>(template)
