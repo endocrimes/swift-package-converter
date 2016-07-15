@@ -9,6 +9,8 @@ enum Error: ErrorProtocol {
     case swiftPathLookup
 }
 
+print("DEBUG: \(NSProcessInfo.processInfo().environment)")
+
 // start the server
 let app = Application()
 
