@@ -20,13 +20,7 @@ public func mktemp<T>(prefix: String! = nil, body: @noescape(String) throws -> T
 
 public func swiftpmManifestTurnToJSON(at path: String) throws -> String {
     
-    #if os(Linux)
-        let prefix: String = "$ROOT_DIR/"
-    #else
-        let prefix: String = "~/."
-    #endif
-    
-    let swiftPath = try Task.run("\(prefix)swiftenv/bin/swiftenv", "which", "swift")
+    let swiftPath = try Task.run("swiftenv", "which", "swift")
     guard swiftPath.code == 0 else {
         throw Error.swiftPathLookup
     }
