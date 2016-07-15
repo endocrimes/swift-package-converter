@@ -20,7 +20,7 @@ app.get("/") { _ in
 app.get("/swift-version") { _ in
     var comps = #file.characters.split(separator: "/").map(String.init)
     let path = ([""] + comps.dropLast(2) + [".swift-version"]).joined(separator: "/")
-    var version = try NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String
+    var version = try stringContentsOfFile(at: path)
     if version.characters.last! == "\n" {
         version = String(version.characters.dropLast())
     }

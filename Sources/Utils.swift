@@ -37,3 +37,7 @@ public func swiftpmManifestTurnToJSON(at path: String) throws -> String {
     }
     return result.stdout
 }
+
+public func stringContentsOfFile(at path: String) throws -> String {
+    return try String(contentsOfFile: path, encoding: NSUTF8StringEncoding)
+}
