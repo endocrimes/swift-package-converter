@@ -17,10 +17,6 @@ app.get("/") { _ in
     return "See documentation at https://github.com/czechboy0/swift-package-converter"
 }
 
-app.get("/env") { _ in
-    return "DEBUG: \(NSProcessInfo.processInfo().environment)"
-}
-
 app.get("/swift-version") { _ in
     var comps = #file.characters.split(separator: "/").map(String.init)
     let path = ([""] + comps.dropLast(2) + [".swift-version"]).joined(separator: "/")
