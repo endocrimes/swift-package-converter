@@ -9,14 +9,16 @@ enum Error: ErrorProtocol {
     case swiftPathLookup
 }
 
-print("DEBUG: \(NSProcessInfo.processInfo().environment)")
-
 // start the server
 let app = Application()
 
 // routes
 app.get("/") { _ in
     return "See documentation at https://github.com/czechboy0/swift-package-converter"
+}
+
+app.get("/env") { _ in
+    return "DEBUG: \(NSProcessInfo.processInfo().environment)"
 }
 
 app.get("/swift-version") { _ in
