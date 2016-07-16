@@ -21,7 +21,7 @@ public func mktemp<T>(prefix: String! = nil, body: @noescape(String) throws -> T
 public func swiftpmManifestTurnToJSON(at path: String) throws -> String {
     
     let result = try Task.run(
-        "/.swift/usr/bin/swift",
+        "swift",
         "package",
         "dump-package",
         "--output",
