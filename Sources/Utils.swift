@@ -44,9 +44,9 @@ public func stringContentsOfFile(at path: String) throws -> String {
 
 class TimerMiddleware: Middleware {
     func respond(to request: Request, chainingTo next: Responder) throws -> Response {
-        let start = now()
+        let start = NSDate()
         var response = try next.respond(to: request)
-        let duration = now() - start
+        let duration = -start.timeIntervalSinceNow
         let ms = Double(Int(duration * 1000 * 1000))/1000
         let text = "\(ms) ms"
         response.headers["vapor-duration"] = Response.Headers.Values(text)
