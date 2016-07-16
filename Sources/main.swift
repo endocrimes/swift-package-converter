@@ -11,6 +11,7 @@ enum Error: ErrorProtocol {
 
 // start the server
 let app = Application()
+app.middleware.append(TimerMiddleware())
 
 // routes
 app.get("/") { _ in

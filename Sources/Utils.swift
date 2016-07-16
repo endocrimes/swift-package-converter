@@ -41,3 +41,15 @@ public func swiftpmManifestTurnToJSON(at path: String) throws -> String {
 public func stringContentsOfFile(at path: String) throws -> String {
     return try String(contentsOfFile: path, encoding: NSUTF8StringEncoding)
 }
+
+class TimerMiddleware: Middleware {
+    func respond(to request: Request, chainingTo next: Responder) throws -> Response {
+        let start = now()
+        var response = try next.respond(to: request)
+        let duration = now() - start
+        let ms = Double(Int(duration * 1000 * 1000))/1000
+        let text = "\(ms) ms"
+        response.headers["vapor-duration"] = Response.Headers.Values(text)
+        return response
+    }
+}
