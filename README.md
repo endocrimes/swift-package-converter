@@ -1,7 +1,7 @@
 # swift-package-converter
 API to convert Package.swift files into JSON
 
-Runs on `https://swift-package-converter.herokuapp.com`.
+Runs on `http://46.101.24.4:8080`.
 
 # :rocket: Endpoints
 
