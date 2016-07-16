@@ -20,13 +20,8 @@ public func mktemp<T>(prefix: String! = nil, body: @noescape(String) throws -> T
 
 public func swiftpmManifestTurnToJSON(at path: String) throws -> String {
     
-    let swiftPath = try Task.run("swiftenv", "which", "swift")
-    guard swiftPath.code == 0 else {
-        throw Error.swiftPathLookup
-    }
-    
     let result = try Task.run(
-        swiftPath.stdout,
+        "swift",
         "package",
         "dump-package",
         "--output",

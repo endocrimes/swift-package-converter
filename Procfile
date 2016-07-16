@@ -1,1 +1,0 @@
-web: swift-package-converter --config:app.port=$PORT
