@@ -1,6 +1,7 @@
 
 build:
-	sudo vapor docker build
+	docker build .
 
 run:
-	sudo docker run --rm -it -v $(pwd):/vapor -p 8081:8080 qutheory/swift:DEVELOPMENT-SNAPSHOT-2016-06-06-a
+	docker run -it --rm -v $PWD:/package -p 8080:8080 6e0153663fa4
+
