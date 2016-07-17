@@ -12,7 +12,7 @@ Runs on `http://192.241.154.173`.
 ## `GET /swift-version`
 - *Returns*: string version of the Swift toolchain used.
 
-# :bolts: Installation
+# :zap: Installation
 
 Since the above IP might go away at any point, without warnings, please deploy the converter on your own server if you're relying on it.
 
