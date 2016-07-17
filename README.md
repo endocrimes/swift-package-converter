@@ -1,7 +1,7 @@
 # swift-package-converter
 API to convert Package.swift files into JSON
 
-Runs on `http://46.101.24.4:8080`.
+Runs on `http://192.241.154.173`.
 
 # :rocket: Endpoints
 
