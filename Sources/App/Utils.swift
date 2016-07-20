@@ -3,18 +3,20 @@ import Environment
 import Vapor
 import Tasks
 
-public func mktemp<T>(prefix: String! = nil, body: @noescape(String) throws -> T) rethrows -> T {
-    var prefix = prefix ?? Env["TMPDIR"] ?? "/tmp/"
-    if !prefix.hasSuffix("/") { prefix += "/" }
-
-    let path = prefix + "\(String(random())).XXXXXX"
+public func mkdtemp<T>(prefix: String! = nil, body: @noescape(String) throws -> T) rethrows -> T {
+    var prefix = prefix
+    if prefix == nil { prefix = Env["TMPDIR"] ?? "/tmp/" }
+    if !prefix!.hasSuffix("/") {
+        prefix! += "/"
+    }
+    let path = prefix! + "\(String(random())).XXXXXX"
     
     return try path.withCString { template in
         let mutable = UnsafeMutablePointer<Int8>(template)
-        let file = mkstemp(mutable)
-        // Remove the file on exit.
-        defer { unlink(mutable) }
-        return try body(String(validatingUTF8: mutable)!)
+        let dir = mkdtemp(mutable)
+        if dir == nil { throw Error.mkdtempFailed }
+        defer { rmdir(dir!) }
+        return try body(String(validatingUTF8: dir!)!)
     }
 }
 
@@ -28,7 +30,7 @@ public func swiftpmManifestTurnToJSON(at path: String) throws -> String {
         path
     )
     guard result.code == 0 else {
-        throw Error.packageSwiftParsingFailed
+        throw Error.packageSwiftParsingFailed(result.stderr)
     }
     return result.stdout
 }
@@ -62,7 +64,7 @@ class LoggingMiddleware: Middleware {
         let duration = -start.timeIntervalSinceNow
         let ms = Double(Int(duration * 1000 * 1000))/1000
         let durationText = "\(ms) ms"
-        app?.log.info("\(request.method) \(request.uri.path ?? "?") -> \(response.status.statusCode) (\(durationText))")
+        app?.log.info("[\(NSDate())] \(request.method) \(request.uri.path ?? "?") -> \(response.status.statusCode) (\(durationText))")
         return response
     }
 }

@@ -4,8 +4,8 @@ import Environment
 
 enum Error: ErrorProtocol {
     case noBodySupplied
-    case packageSwiftParsingFailed
-    case mktempFailed
+    case packageSwiftParsingFailed(String)
+    case mkdtempFailed
     case swiftPathLookup
 }
 
@@ -38,7 +38,9 @@ app.post("/to-json") { request in
     }
     
     //create a temp file
-    let result = try mktemp { (path) -> String in
+    let result = try mkdtemp { (folderPath) -> String in
+        
+        let path = "\(folderPath)/Package.swift"
         
         //write data to temp file
         let string = try bytes.toString()
@@ -46,6 +48,10 @@ app.post("/to-json") { request in
         
         //ask swiftpm to parse it
         let result = try swiftpmManifestTurnToJSON(at: path)
+        
+        //clean up
+        unlink(path)
+        
         return result
     }
     
