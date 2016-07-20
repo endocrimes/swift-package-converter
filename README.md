@@ -1,7 +1,7 @@
 # swift-package-converter
 API to convert Package.swift files into JSON
 
-Runs on `http://swiftpm.honza.tech`.
+Runs on [`http://swiftpm.honza.tech`](http://swiftpm.honza.tech).
 
 # :rocket: Endpoints
 
@@ -14,7 +14,7 @@ Runs on `http://swiftpm.honza.tech`.
 
 # :zap: Installation
 
-Since the above IP might go away at any point, without warnings, please deploy the converter on your own server if you're relying on it.
+Since the above server might go away at any point, without warnings, please deploy the converter on your own server if you're relying on it. 
 
 # Local
  For running locally, just
