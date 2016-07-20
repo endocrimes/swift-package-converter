@@ -28,7 +28,7 @@ app.get("/swift-version") { _ in
     if version.characters.last! == "\n" {
         version = String(version.characters.dropLast())
     }
-    return version
+    return Response(headers: ["Content-Type":"text/plain"], body: version)
 }
 
 app.post("/to-json") { request in
