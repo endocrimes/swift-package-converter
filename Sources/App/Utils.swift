@@ -11,10 +11,10 @@ public func mktemp<T>(prefix: String! = nil, body: @noescape(String) throws -> T
     
     return try path.withCString { template in
         let mutable = UnsafeMutablePointer<Int8>(template)
-        guard let file = mktemp(mutable) else { throw Error.mktempFailed }
+        let file = mkstemp(mutable)
         // Remove the file on exit.
-        defer { unlink(file) }
-        return try body(String(validatingUTF8: file)!)
+        defer { unlink(mutable) }
+        return try body(String(validatingUTF8: mutable)!)
     }
 }
 
@@ -48,3 +48,22 @@ class TimerMiddleware: Middleware {
         return response
     }
 }
+
+class LoggingMiddleware: Middleware {
+    
+    weak var app: Application?
+    init(app: Application) {
+        self.app = app
+    }
+    
+    func respond(to request: Request, chainingTo next: Responder) throws -> Response {
+        let start = NSDate()
+        let response = try next.respond(to: request)
+        let duration = -start.timeIntervalSinceNow
+        let ms = Double(Int(duration * 1000 * 1000))/1000
+        let durationText = "\(ms) ms"
+        app?.log.info("\(request.method) \(request.uri.path ?? "?") -> \(response.status.statusCode) (\(durationText))")
+        return response
+    }
+}
+

@@ -11,11 +11,14 @@ enum Error: ErrorProtocol {
 
 // start the server
 let app = Application()
+app.add(LoggingMiddleware(app: app))
 app.add(TimerMiddleware())
 
 // routes
 app.get("/") { _ in
-    return "See documentation at https://github.com/czechboy0/swift-package-converter"
+    let css = "<style>body { padding: 50px; font: 14px \"Lucida Grande\", Helvetica, Arial, sans-serif; } a {color: #00B7FF;}</style>"
+    let body = "<html><head>\(css)</head><body><h1>swiftpm.honza.tech</h1><p>See documentation at <a href=\"https://github.com/czechboy0/swift-package-converter\">github.com/czechboy0/swift-package-converter</p></h1></body></html>"
+    return Response(headers: ["Content-Type":"text/html"], body: body)
 }
 
 app.get("/swift-version") { _ in
