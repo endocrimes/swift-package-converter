@@ -4,13 +4,18 @@ import Vapor
 import HTTP
 import Tasks
 
-public func mkdtemp<T>(prefix: String! = nil, body: @noescape(String) throws -> T) rethrows -> T {
+public func mkdtemp<T>(prefix: String! = nil, body: (String) throws -> T) rethrows -> T {
     var prefix = prefix
     if prefix == nil { prefix = Env["TMPDIR"] ?? "/tmp/" }
     if !prefix!.hasSuffix("/") {
         prefix! += "/"
     }
-    let path = prefix! + "\(String(arc4random())).XXXXXX"
+    #if os(OSX)
+    let randomNum = arc4random()
+    #else
+    let randomNum = rand()
+    #endif
+    let path = prefix! + "\(String(randomNum)).XXXXXX"
     
     return try path.withCString { template in
         let mutable = UnsafeMutablePointer<Int8>(template)
