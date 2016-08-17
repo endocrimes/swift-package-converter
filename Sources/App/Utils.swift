@@ -1,6 +1,7 @@
 import Foundation
 import Environment
 import Vapor
+import HTTP
 import Tasks
 
 public func mkdtemp<T>(prefix: String! = nil, body: @noescape(String) throws -> T) rethrows -> T {
@@ -9,12 +10,12 @@ public func mkdtemp<T>(prefix: String! = nil, body: @noescape(String) throws -> 
     if !prefix!.hasSuffix("/") {
         prefix! += "/"
     }
-    let path = prefix! + "\(String(random())).XXXXXX"
+    let path = prefix! + "\(String(arc4random())).XXXXXX"
     
     return try path.withCString { template in
         let mutable = UnsafeMutablePointer<Int8>(template)
         let dir = mkdtemp(mutable)
-        if dir == nil { throw Error.mkdtempFailed }
+        if dir == nil { throw AppError.mkdtempFailed }
         defer { rmdir(dir!) }
         return try body(String(validatingUTF8: dir!)!)
     }
@@ -26,17 +27,17 @@ public func swiftpmManifestTurnToJSON(at path: String) throws -> String {
         "swift",
         "package",
         "dump-package",
-        "--output",
+        "--input",
         path
     )
     guard result.code == 0 else {
-        throw Error.packageSwiftParsingFailed(result.stderr)
+        throw AppError.packageSwiftParsingFailed(result.stderr)
     }
     return result.stdout
 }
 
 public func stringContentsOfFile(at path: String) throws -> String {
-    return try String(contentsOfFile: path, encoding: NSUTF8StringEncoding)
+    return try String(contentsOfFile: path, encoding: .utf8)
 }
 
 class TimerMiddleware: Middleware {
@@ -53,8 +54,8 @@ class TimerMiddleware: Middleware {
 
 class LoggingMiddleware: Middleware {
     
-    weak var app: Application?
-    init(app: Application) {
+    weak var app: Droplet?
+    init(app: Droplet) {
         self.app = app
     }
     
@@ -64,7 +65,7 @@ class LoggingMiddleware: Middleware {
         let duration = -start.timeIntervalSinceNow
         let ms = Double(Int(duration * 1000 * 1000))/1000
         let durationText = "\(ms) ms"
-        app?.log.info("[\(NSDate())] \(request.method) \(request.uri.path ?? "?") -> \(response.status.statusCode) (\(durationText))")
+        app?.log.info("[\(NSDate())] \(request.method) \(request.uri.path) -> \(response.status.statusCode) (\(durationText))")
         return response
     }
 }

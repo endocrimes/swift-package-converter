@@ -1,6 +1,6 @@
 
 FROM kylef/swiftenv
-RUN swiftenv install DEVELOPMENT-SNAPSHOT-2016-06-06-a
+RUN swiftenv install DEVELOPMENT-SNAPSHOT-2016-07-25-a
 
 WORKDIR /package
 VOLUME /package
